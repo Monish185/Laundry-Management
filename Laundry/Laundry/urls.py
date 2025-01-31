@@ -21,6 +21,6 @@ from django.conf.urls.static import static
 from django.shortcuts import redirect
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('laundry/',include('laundryapp.urls'))
+    path('laundry/',include('laundryapp.urls')),
     path('', lambda request: redirect('/laundry/')),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
