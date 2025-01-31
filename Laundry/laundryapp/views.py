@@ -8,6 +8,7 @@ from django.contrib.auth.hashers import check_password
 from rest_framework.authtoken.models import Token
 from .models import Student, Worker, LaundrySlip
 from .serializers import LaundrySlipSerializer, StudentSerializer, WorkerSerializer
+from django.http import HttpResponse
 
 
 
@@ -196,4 +197,8 @@ def report_issue(request, slip_id):
     except LaundrySlip.DoesNotExist:
         return Response({"error": "Slip not found"}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['POST'])
 
+@permission_classes([IsAuthenticated])
+def home(request):
+     return HttpResponse("Welcome to the Laundry Management System!")

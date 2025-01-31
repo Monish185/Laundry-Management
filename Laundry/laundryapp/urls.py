@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('',views.home,name='home'),
     path("login/", views.login_user, name="login_user"),
     path("create-slip/", views.create_slip, name="create_slip"),
     path("update-slip-status/<int:slip_id>/", views.update_slip_status, name="update_slip_status"),
