@@ -4,11 +4,15 @@ from datetime import timedelta
 import environ
 from dotenv import load_dotenv
 import dj_database_url
-# Load environment variables
-env = environ.Env()
-environ.Env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables
+env = environ.Env()
+# Load the .env file (set the path to the correct location if needed)
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+
 
 # SECURITY WARNING: Keep the secret key used in production secret!
 SECRET_KEY = env("DJANGO_SECRET_KEY", default="django-insecure-d)_qcftd8w531)@hxy6jo_g3onrd%!rm5dv@fi(kv)a6l&$zky")
@@ -86,7 +90,7 @@ WSGI_APPLICATION = 'Laundry.wsgi.application'
 
 # Database Configuration (Use PostgreSQL in Production)
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    'default': env.db('DATABASE_URL', default='postgresql://localhost/laundry')
 }
 
 # Password Validators
