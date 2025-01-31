@@ -172,12 +172,6 @@ def logout(request):
     logout(request._request)
     return Response({"message": "User logged out successfully"}, status=status.HTTP_200_OK)
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
-from .models import LaundrySlip
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def report_issue(request, slip_id):
@@ -198,7 +192,6 @@ def report_issue(request, slip_id):
         return Response({"error": "Slip not found"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
-
 @permission_classes([IsAuthenticated])
 def home(request):
      return HttpResponse("Welcome to the Laundry Management System!")
