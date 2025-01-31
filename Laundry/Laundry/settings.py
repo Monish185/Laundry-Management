@@ -2,7 +2,8 @@ from pathlib import Path
 import os
 from datetime import timedelta
 import environ
-
+from dotenv import load_dotenv
+import dj_database_url
 # Load environment variables
 env = environ.Env()
 environ.Env.read_env()
@@ -85,7 +86,7 @@ WSGI_APPLICATION = 'Laundry.wsgi.application'
 
 # Database Configuration (Use PostgreSQL in Production)
 DATABASES = {
-    'default': env.db(default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
 # Password Validators
