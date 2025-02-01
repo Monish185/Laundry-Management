@@ -4,6 +4,7 @@ from datetime import timedelta
 import environ
 from dotenv import load_dotenv
 import dj_database_url
+from django.conf import settings
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,9 +19,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env("DJANGO_SECRET_KEY", default="django-insecure-d)_qcftd8w531)@hxy6jo_g3onrd%!rm5dv@fi(kv)a6l&$zky")
 
 # SECURITY WARNING: Don't run with debug turned on in production!
-DEBUG = env.bool("DJANGO_DEBUG", default=True)
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = [*]
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",") if DEBUG else []
 
 # Installed Applications
 INSTALLED_APPS = [
