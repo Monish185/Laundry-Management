@@ -192,6 +192,6 @@ def report_issue(request, slip_id):
         return Response({"error": "Slip not found"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def home(request):
      return HttpResponse("Welcome to the Laundry Management System!")
