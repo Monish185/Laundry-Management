@@ -20,7 +20,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", default="django-insecure-d)_qcftd8w531)@hx
 # SECURITY WARNING: Don't run with debug turned on in production!
 DEBUG = env.bool("DJANGO_DEBUG", default=True)
 
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["*"] if DEBUG else [])
+ALLOWED_HOSTS = [*]
 
 # Installed Applications
 INSTALLED_APPS = [
