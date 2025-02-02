@@ -15,12 +15,12 @@ function SlipDetail() {
         const fetchSlip = async () => {
             try {
                 const token = localStorage.getItem('authToken');
-                const user = await axios.get(`${import.meta.env.REACT_APP_API_URL}profile/`, {
+                const user = await axios.get(`${import.meta.env.VITE_API_URL}profile/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
                 setIsWorker(user.data.role === 'worker');
 
-                const res = await axios.get(`${import.meta.env.REACT_APP_API_URL}get-slip-details/${id}/`, {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}get-slip-details/${id}/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
                 setSlip(res.data);
@@ -39,7 +39,7 @@ function SlipDetail() {
         try {
             const token = localStorage.getItem('authToken');
             const res = await axios.post(
-                `${import.meta.env.REACT_APP_API_URL}update-slip-status/${id}/`,
+                `${import.meta.env.VITE_API_URL}update-slip-status/${id}/`,
                 { status },
                 { headers: { Authorization: `Token ${token}`, 'Content-Type': 'application/json' } }
             );
@@ -55,7 +55,7 @@ function SlipDetail() {
         try {
             const token = localStorage.getItem('authToken');
             const res = await axios.post(
-                `${import.meta.env.REACT_APP_API_URL}edit-particulars/`,
+                `${import.meta.env.VITE_API_URL}edit-particulars/`,
                 { slip_id: id, particulars },
                 { headers: { Authorization: `Token ${token}`, 'Content-Type': 'application/json' } }
             );

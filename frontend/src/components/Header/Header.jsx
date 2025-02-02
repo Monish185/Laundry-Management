@@ -12,7 +12,7 @@ function Header() {
                 const token = localStorage.getItem("authToken");
                 if (!token) return;
 
-                const res = await axios.get(`${import.meta.env.REACT_APP_API_URL}profile/`, {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}profile/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
 

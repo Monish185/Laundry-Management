@@ -5,7 +5,7 @@ const Admin = () => {
     const navigate = useNavigate();
 
     const handleAdminClick = () => {
-        window.location.href = `${import.meta.env.REACT_APP_API_URL}admin/`;
+        window.location.href = `${import.meta.env.VITE_API_URL}admin/`;
     };
 
     return (
