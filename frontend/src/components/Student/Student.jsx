@@ -15,14 +15,14 @@ const Student = () => {
         const fetchSlips = async () => {
             try {
                 const token = localStorage.getItem("authToken");
-                const user = await axios.get("http://127.0.0.1:8000/laundry/profile/", {
+                const user = await axios.get(`${import.meta.env.REACT_APP_API_URL}profile/`, {
                     headers: {
                         Authorization: `Token ${token}`,
                     },
                 });
                 setIsStudent(user.data.role === "student");
 
-                const res = await axios.get("http://127.0.0.1:8000/laundry/slip-list/", {
+                const res = await axios.get(`${import.meta.env.REACT_APP_API_URL}slip-list/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
 
@@ -59,7 +59,7 @@ const Student = () => {
         try {
             const token = localStorage.getItem("authToken");
             await axios.post(
-                `http://127.0.0.1:8000/laundry/report-issue/${slipId}/`,
+                `${process.env.REACT_APP_API_URL}report-issue/${slipId}/`,
                 {
                     issue: newComplaint,
                 },

@@ -5,7 +5,7 @@ const Admin = () => {
     const navigate = useNavigate();
 
     const handleAdminClick = () => {
-        window.location.href = 'http://127.0.0.1:8000/admin/';
+        window.location.href = `${import.meta.env.REACT_APP_API_URL}admin/`;
     };
 
     return (

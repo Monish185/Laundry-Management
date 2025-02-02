@@ -39,7 +39,7 @@ const SlipCreate = () => {
       }
 
       try {
-        const response = await axios.get("http://127.0.0.1:8000/laundry/profile/", {
+        const response = await axios.get(`${import.meta.env.REACT_APP_API_URL}profile/`, {
           headers: { Authorization: `Token ${token}` },
         });
 
@@ -66,7 +66,7 @@ const SlipCreate = () => {
     const token = localStorage.getItem("authToken");
     try {
       await axios.post(
-        "http://127.0.0.1:8000/laundry/create-slip/",
+        `${import.meta.env.REACT_APP_API_URL}create-slip/`,
         { roll_no: rollNo, particulars: quantities },
         { headers: { Authorization: `Token ${token}`, "Content-Type": "application/json" } }
       );

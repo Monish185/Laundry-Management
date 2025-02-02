@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 const Profile = () => {
     const [profile, setProfile] = useState(null);
     const [role, setRole] = useState("");
@@ -12,7 +13,7 @@ const Profile = () => {
         const fetchProfile = async () => {
             try {
                 const token = localStorage.getItem("authToken");
-                const res = await axios.get("http://127.0.0.1:8000/laundry/profile/", {
+                const res = await axios.get(`${import.meta.env.REACT_APP_API_URL}profile/`, {
                     headers: { Authorization: `Token ${token}` }
                 });
                 setUser(true);
@@ -30,22 +31,23 @@ const Profile = () => {
     }, []);
 
     const handleLogOut = async () => {
-        try{
+        try {
             const token = localStorage.getItem('authToken');
-            const res = await axios.post('http://127.0.0.1:8000/laundry/logout/',{},{
+            const res = await axios.post(`${import.meta.env.REACT_APP_API_URL}logout/`, {}, {
                 headers: { Authorization: `Token ${token}` },
             });
             localStorage.removeItem('authToken');
-            alert('Logged out successfully')
+            alert('Logged out successfully');
             navigate('/');
-        }catch(err){
+        } catch (err) {
             console.error("Logging out failed", err);
-             alert("Failed to log out. Please try again later.");
+            alert("Failed to log out. Please try again later.");
         }
-    }
+    };
+
     if (loading) return <div>Loading...</div>;
-    if(!user){
-        return(
+    if (!user) {
+        return (
             <div className="flex justify-center items-center h-screen">
                 <div className="text-center">
                     <h1 className="text-4xl font-bold text-gray-800">Please Login</h1>
@@ -54,7 +56,7 @@ const Profile = () => {
                     </button>
                 </div>
             </div>
-        )
+        );
     }
 
     return (
@@ -77,7 +79,7 @@ const Profile = () => {
                 )}
             </div>
             <button className="btn border-spacing-1 text-white bg-red-400 p-3 text-lg m-4 rounded-md hover:bg-red-500 hover:text-green-50" onClick={handleLogOut}>
-                Log Out 
+                Log Out
             </button>
         </div>
     );

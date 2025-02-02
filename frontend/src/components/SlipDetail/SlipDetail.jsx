@@ -15,12 +15,12 @@ function SlipDetail() {
         const fetchSlip = async () => {
             try {
                 const token = localStorage.getItem('authToken');
-                const user = await axios.get('http://127.0.0.1:8000/laundry/profile/', {
+                const user = await axios.get(`${import.meta.env.REACT_APP_API_URL}profile/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
                 setIsWorker(user.data.role === 'worker');
 
-                const res = await axios.get(`http://127.0.0.1:8000/laundry/get-slip-details/${id}/`, {
+                const res = await axios.get(`${import.meta.env.REACT_APP_API_URL}get-slip-details/${id}/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
                 setSlip(res.data);
@@ -39,7 +39,7 @@ function SlipDetail() {
         try {
             const token = localStorage.getItem('authToken');
             const res = await axios.post(
-                `http://127.0.0.1:8000/laundry/update-slip-status/${id}/`,
+                `${import.meta.env.REACT_APP_API_URL}update-slip-status/${id}/`,
                 { status },
                 { headers: { Authorization: `Token ${token}`, 'Content-Type': 'application/json' } }
             );
@@ -55,7 +55,7 @@ function SlipDetail() {
         try {
             const token = localStorage.getItem('authToken');
             const res = await axios.post(
-                `http://127.0.0.1:8000/laundry/edit-particulars/`,
+                `${import.meta.env.REACT_APP_API_URL}edit-particulars/`,
                 { slip_id: id, particulars },
                 { headers: { Authorization: `Token ${token}`, 'Content-Type': 'application/json' } }
             );
@@ -72,8 +72,6 @@ function SlipDetail() {
         const body = encodeURIComponent(
             `Dear Student,\n\nYour reported issue for Laundry Slip #${slipId} has been noted.\n\nIssue: "${issue}"\n\nPlease reply to this email for any further clarification.\n\nBest regards,\nLaundry Management`
         );
-    
-        // Open Gmail with pre-filled subject and body
         window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${studentEmail}&su=${subject}&body=${body}`, "_blank");
     };
     
@@ -155,8 +153,6 @@ function SlipDetail() {
                         <p className="text-gray-500">No issues reported by the student.</p>
                     )}
                 </div>
-                
-                {/* Resolve Issue Section */}
                
             </div>
 

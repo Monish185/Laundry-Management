@@ -12,13 +12,13 @@
             const fetchSlips = async () => {
                 try {
                     const token = localStorage.getItem("authToken");  
-                    const user = await axios.get("http://127.0.0.1:8000/laundry/profile/", {
+                    const user = await axios.get(`${import.meta.env.REACT_APP_API_URL}profile/`, {
                         headers: {
                             Authorization: `Token ${token}`,
                         },
                     });
                     setIsWorker(user.data.role ===   'worker');
-                    const res = await axios.get('http://127.0.0.1:8000/laundry/slip-list/', {
+                    const res = await axios.get(`${import.meta.env.REACT_APP_API_URL}slip-list/`, {
                         headers: {
                             Authorization: `Token ${token}`,  // Include token in headers
                         },

@@ -15,7 +15,7 @@ function Login() {
         const check = async () => {
             try {
                 const token = localStorage.getItem('authToken');
-                const user = await axios.get('https://laundry-management-il8w.onrender.com/laundry/profile/', {
+                const user = await axios.get(`${import.meta.env.REACT_APP_API_URL}profile/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
                 setperson(user.data.role);
@@ -41,7 +41,7 @@ function Login() {
 
         try {
             
-            const response = await fetch('https://laundry-management-il8w.onrender.com/laundry/login/', {
+            const response = await fetch(`${import.meta.env.REACT_APP_API_URL}login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ function Login() {
     const handleLogOut = async () => {
         try{
             const token = localStorage.getItem('authToken');
-            const res = await axios.post('https://laundry-management-il8w.onrender.com/laundry/logout/',{},{
+            const res = await axios.post(`${import.meta.env.REACT_APP_API_URL}logout/`,{},{
                 headers: { Authorization: `Token ${token}` },
             });
             localStorage.removeItem('authToken');
@@ -183,12 +183,6 @@ function Login() {
                         {loading ? 'Logging In...' : 'Log In'}
                     </button>
                 </form>
-                <p className="text-teal-700 mt-4">
-                    Don't Have an account?{' '}
-                    <Link to={`/Register/${role}`} className="text-cyan-500">
-                        Register Here
-                    </Link>
-                </p>
             </div>
         </div>
     );
