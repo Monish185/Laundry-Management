@@ -5,6 +5,7 @@ import environ
 from dotenv import load_dotenv
 import dj_database_url
 from django.conf import settings
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,7 +22,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", default="django-insecure-d)_qcftd8w531)@hx
 # SECURITY WARNING: Don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",") if DEBUG else []
+ALLOWED_HOSTS = ['*']
 
 # Installed Applications
 INSTALLED_APPS = [
@@ -50,6 +51,7 @@ REST_FRAMEWORK = {
 # Middleware
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -92,7 +94,7 @@ WSGI_APPLICATION = 'Laundry.wsgi.application'
 
 # Database Configuration (Use PostgreSQL in Production)
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgresql://localhost/laundry')
+    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
 # Password Validators
