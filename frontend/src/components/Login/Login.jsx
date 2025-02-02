@@ -15,7 +15,7 @@ function Login() {
         const check = async () => {
             try {
                 const token = localStorage.getItem('authToken');
-                const user = await axios.get('http://127.0.0.1:8000/laundry/profile/', {
+                const user = await axios.get('https://laundry-management-il8w.onrender.com/laundry/profile/', {
                     headers: { Authorization: `Token ${token}` },
                 });
                 setperson(user.data.role);
@@ -41,7 +41,7 @@ function Login() {
 
         try {
             
-            const response = await fetch('http://127.0.0.1:8000/laundry/login/', {
+            const response = await fetch('https://laundry-management-il8w.onrender.com/laundry/login/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ function Login() {
     const handleLogOut = async () => {
         try{
             const token = localStorage.getItem('authToken');
-            const res = await axios.post('http://127.0.0.1:8000/laundry/logout/',{},{
+            const res = await axios.post('https://laundry-management-il8w.onrender.com/laundry/logout/',{},{
                 headers: { Authorization: `Token ${token}` },
             });
             localStorage.removeItem('authToken');
