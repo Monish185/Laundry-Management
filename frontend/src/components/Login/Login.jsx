@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Login() {
@@ -11,13 +11,15 @@ function Login() {
     const [loading, setLoading] = useState(false);
     const [person, setPerson] = useState('');
 
+    const API_URL = import.meta.env.VITE_API_URL;
+
     useEffect(() => {
         const checkProfile = async () => {
             try {
                 const token = localStorage.getItem('authToken');
                 if (!token) return;
 
-                const response = await axios.get('https://laundry-management-il8w.onrender.com/laundry/profile/', {
+                const response = await axios.get(`${API_URL}/profile/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
                 setPerson(response.data.role);
@@ -27,7 +29,7 @@ function Login() {
         };
 
         checkProfile();
-    }, [navigate]);
+    }, [API_URL]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,7 +42,7 @@ function Login() {
         }
 
         try {
-            const response = await fetch('https://laundry-management-il8w.onrender.com/laundry/login/', {
+            const response = await fetch(`${API_URL}/login/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -72,7 +74,7 @@ function Login() {
     const handleLogOut = async () => {
         try {
             const token = localStorage.getItem('authToken');
-            await axios.post('https://laundry-management-il8w.onrender.com/laundry/logout/', {}, {
+            await axios.post(`${API_URL}/logout/`, {}, {
                 headers: { Authorization: `Token ${token}` },
             });
             localStorage.removeItem('authToken');
