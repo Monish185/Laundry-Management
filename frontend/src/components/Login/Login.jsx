@@ -19,7 +19,7 @@ function Login() {
                 const token = localStorage.getItem('authToken');
                 if (!token) return;
 
-                const response = await axios.get(`${API_URL}/profile/`, {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/profile/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
                 setPerson(response.data.role);
@@ -42,7 +42,7 @@ function Login() {
         }
 
         try {
-            const response = await fetch(`${API_URL}/login/`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/login/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -74,7 +74,7 @@ function Login() {
     const handleLogOut = async () => {
         try {
             const token = localStorage.getItem('authToken');
-            await axios.post(`${API_URL}/logout/`, {}, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/logout/`, {}, {
                 headers: { Authorization: `Token ${token}` },
             });
             localStorage.removeItem('authToken');
