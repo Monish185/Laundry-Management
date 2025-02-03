@@ -17,27 +17,29 @@ const Student = () => {
         const fetchSlips = async () => {
             try {
                 const token = localStorage.getItem("authToken");
-
+    
                 if (!token) {
                     setLoading(false);
                     return navigate("/login/student/");
                 }
-
+    
                 const userRes = await axios.get(`${API_URL}/laundry/profile/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
-
+    
+                console.log("User Profile Response:", userRes.data); // Debugging log
+    
                 if (userRes.data.role !== "student") {
                     setLoading(false);
                     return navigate("/");
                 }
-
+    
                 setIsStudent(true);
-
+    
                 const slipsRes = await axios.get(`${API_URL}/laundry/slip-list/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
-
+    
                 setSlips(slipsRes.data || []);
             } catch (error) {
                 console.error("Error fetching slips:", error);
@@ -46,9 +48,10 @@ const Student = () => {
                 setLoading(false);
             }
         };
-
+    
         fetchSlips();
     }, [API_URL, navigate]);
+    
 
     const formatDateTime = (dateString) => {
         const date = new Date(dateString);
