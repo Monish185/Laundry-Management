@@ -42,7 +42,7 @@ function Login() {
         }
 
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}login/`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}login/`, {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
