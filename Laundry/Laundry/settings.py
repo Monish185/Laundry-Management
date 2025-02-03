@@ -63,10 +63,10 @@ MIDDLEWARE = [
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS", default=True)
-CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "https://monish185.github.io").split(",")
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "https://laundry-management-lake.vercel.app/").split(",")
 
 # CSRF Trusted Origins
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "https://monish185.github.io").split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "https://laundry-management-lake.vercel.app/").split(",")
 
 
 APPEND_SLASH = False
