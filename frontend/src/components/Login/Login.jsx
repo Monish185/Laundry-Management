@@ -19,7 +19,7 @@ function Login() {
                 const token = localStorage.getItem('authToken');
                 if (!token) return;
 
-                const response = await axios.get(`https://laundry-management-il8w.onrender.com/laundry/profile/`, {
+                const response = await axios.get(`${API_URL}/laundry/profile/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
                 setPerson(response.data.role);
@@ -43,12 +43,12 @@ function Login() {
     
         try {
             const response = await axios.post(
-                `https://laundry-management-il8w.onrender.com/laundry/login/`,
-                { email, password }, // ✅ Correctly passing the request body
-                { headers: { 'Content-Type': 'application/json' } } // ✅ Separate headers
+                `${API_URL}/laundry/login/`,
+                { email, password }, 
+                { headers: { 'Content-Type': 'application/json' } } 
             );
     
-            const data = response.data; // ✅ Axios automatically parses JSON
+            const data = response.data; 
     
             if (!['student', 'worker'].includes(data.role)) {
                 alert('Invalid role or credentials');
@@ -70,7 +70,11 @@ function Login() {
     const handleLogOut = async () => {
         try {
             const token = localStorage.getItem('authToken');
-            await axios.post(`https://laundry-management-il8w.onrender.com/laundry/logout/`, {}, {
+            if (!token) {
+                alert("No active session found.");
+                return;
+            }
+            await axios.post(`${API_URL}/laundry/logout/`, {}, {
                 headers: { Authorization: `Token ${token}` },
             });
             localStorage.removeItem('authToken');
@@ -82,36 +86,16 @@ function Login() {
         }
     };
 
-    if (person === 'student') {
+    if (person === 'student' || person === 'worker') {
         return (
             <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
                 <h1 className="text-3xl font-semibold text-gray-700 mb-6">You are already logged in</h1>
                 <button 
                     className="w-80 py-3 rounded-xl text-lg font-bold shadow-md bg-teal-500 text-white 
                                transition-all duration-300 transform hover:bg-teal-600 active:scale-95"
-                    onClick={() => navigate('/student-dashboard')}
+                    onClick={() => navigate(`/${person}-dashboard`)}
                 >
-                    Go to Student Dashboard
-                </button>
-                <button 
-                    className="w-80 py-3 mt-4 rounded-xl text-lg font-bold shadow-md bg-gray-800 text-white 
-                               transition-all duration-300 transform hover:bg-gray-900 active:scale-95"
-                    onClick={handleLogOut}
-                >
-                    Logout
-                </button>
-            </div>
-        );
-    } else if (person === 'worker') {
-        return (
-            <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-                <h1 className="text-3xl font-semibold text-gray-700 mb-6">You are already logged in</h1>
-                <button 
-                    className="w-80 py-3 rounded-xl text-lg font-bold shadow-md bg-teal-500 text-white 
-                               transition-all duration-300 transform hover:bg-teal-600 active:scale-95"
-                    onClick={() => navigate('/worker-dashboard')}
-                >
-                    Go to Worker Dashboard
+                    Go to {person.charAt(0).toUpperCase() + person.slice(1)} Dashboard
                 </button>
                 <button 
                     className="w-80 py-3 mt-4 rounded-xl text-lg font-bold shadow-md bg-gray-800 text-white 
