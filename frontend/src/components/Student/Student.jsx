@@ -3,30 +3,42 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Student = () => {
-    const [slips, setSlips] = useState([]); // Ensure it's an array
+    const [slips, setSlips] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [student, setIsStudent] = useState(false);
-    const [reportingSlip, setReportingSlip] = useState(null); // Tracks which slip is being reported
-    const [newComplaint, setNewComplaint] = useState(""); // Complaint text
+    const [isStudent, setIsStudent] = useState(false);
+    const [reportingSlip, setReportingSlip] = useState(null);
+    const [newComplaint, setNewComplaint] = useState("");
     const navigate = useNavigate();
+
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchSlips = async () => {
             try {
                 const token = localStorage.getItem("authToken");
-                const user = await axios.get(`${import.meta.env.VITE_API_URL}profile/`, {
-                    headers: {
-                        Authorization: `Token ${token}`,
-                    },
-                });
-                setIsStudent(user.data.role === "student");
 
-                const res = await axios.get(`${import.meta.env.VITEP_API_URL}slip-list/`, {
+                if (!token) {
+                    setLoading(false);
+                    return navigate("/login/student/");
+                }
+
+                const userRes = await axios.get(`${API_URL}/laundry/profile/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
 
-                setSlips(res.data || []);
+                if (userRes.data.role !== "student") {
+                    setLoading(false);
+                    return navigate("/");
+                }
+
+                setIsStudent(true);
+
+                const slipsRes = await axios.get(`${API_URL}/laundry/slip-list/`, {
+                    headers: { Authorization: `Token ${token}` },
+                });
+
+                setSlips(slipsRes.data || []);
             } catch (error) {
                 console.error("Error fetching slips:", error);
                 setError("Failed to fetch laundry slips. Please try again later.");
@@ -36,7 +48,7 @@ const Student = () => {
         };
 
         fetchSlips();
-    }, []);
+    }, [API_URL, navigate]);
 
     const formatDateTime = (dateString) => {
         const date = new Date(dateString);
@@ -52,25 +64,22 @@ const Student = () => {
     };
 
     const handleReportIssue = (slipId) => {
-        setReportingSlip(slipId); // Set the slip being reported
+        setReportingSlip(slipId);
     };
 
     const handleSubmitComplaint = async (slipId) => {
         try {
             const token = localStorage.getItem("authToken");
+
             await axios.post(
-                `${process.env.REACT_APP_API_URL}report-issue/${slipId}/`,
-                {
-                    issue: newComplaint,
-                },
-                {
-                    headers: { Authorization: `Token ${token}` },
-                }
+                `${API_URL}/laundry/report-issue/${slipId}/`,
+                { issue: newComplaint },
+                { headers: { Authorization: `Token ${token}` } }
             );
 
             alert("Your issue has been reported successfully!");
             setNewComplaint("");
-            setReportingSlip(null); 
+            setReportingSlip(null);
         } catch (error) {
             console.error("Error reporting issue:", error);
             alert("Failed to report the issue. Please try again.");
@@ -81,14 +90,20 @@ const Student = () => {
         return <div className="text-center text-lg text-gray-600">Loading...</div>;
     }
 
-    if (!student) {
+    if (error) {
+        return <div className="text-center text-red-500">{error}</div>;
+    }
+
+    if (!isStudent) {
         return (
-            <div className="flex flex-col items-center justify-center h-full">
+            <div className="flex flex-col items-center justify-center h-screen">
                 <h2 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h2>
-                <p className="text-lg text-gray-800 mb-4">You must be logged in as a student to view slips.</p>
+                <p className="text-lg text-gray-800 mb-4">
+                    You must be logged in as a student to view slips.
+                </p>
                 <button
-                    className="btn px-4 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700"
-                    onClick={() => navigate("/Login/student/")}
+                    className="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700"
+                    onClick={() => navigate("/login/student/")}
                 >
                     Login
                 </button>
@@ -124,7 +139,7 @@ const Student = () => {
                                 key={key}
                                 className="flex justify-between p-2 bg-white shadow rounded-md"
                             >
-                                <span className="font-semibold">{key}:</span>{" "}
+                                <span className="font-semibold">{key}:</span>
                                 <span>{value}</span>
                             </div>
                         ))}
