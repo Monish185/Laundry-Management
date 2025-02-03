@@ -34,37 +34,34 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
+    
         if (!email.trim() || !password.trim()) {
             alert('Please enter both email and password.');
             setLoading(false);
             return;
         }
-
+    
         try {
-            const response = await axios.post(`https://laundry-management-il8w.onrender.com/laundry/login/`, {
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Login failed');
-            }
-
+            const response = await axios.post(
+                `https://laundry-management-il8w.onrender.com/laundry/login/`,
+                { email, password }, // ✅ Correctly passing the request body
+                { headers: { 'Content-Type': 'application/json' } } // ✅ Separate headers
+            );
+    
+            const data = response.data; // ✅ Axios automatically parses JSON
+    
             if (!['student', 'worker'].includes(data.role)) {
                 alert('Invalid role or credentials');
                 setLoading(false);
                 return;
             }
-
+    
             localStorage.setItem('authToken', data.token);
             alert(`${data.role.charAt(0).toUpperCase() + data.role.slice(1)} logged in successfully`);
             navigate(`/${data.role}-dashboard`);
         } catch (error) {
             console.error('Login error:', error);
-            alert(error.message || 'Failed to log in. Please try again.');
+            alert(error.response?.data?.error || 'Failed to log in. Please try again.');
         } finally {
             setLoading(false);
         }
