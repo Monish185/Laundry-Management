@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
     const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_API_URL;
 
     const handleAdminClick = () => {
-        window.location.href = `${import.meta.env.VITE_API_URL}admin/`;
+        window.location.href = `${API_URL}/admin/`;
     };
 
     return (

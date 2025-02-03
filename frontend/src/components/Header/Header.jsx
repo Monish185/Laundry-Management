@@ -6,13 +6,14 @@ import axios from "axios";
 function Header() {
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
+    const API_URL = import.meta.env.VITE_API_URL;
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const token = localStorage.getItem("authToken");
                 if (!token) return;
 
-                const res = await axios.get(`${import.meta.env.VITE_API_URL}profile/`, {
+                const res = await axios.get(`${API_URL}/laundry/profile/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
 

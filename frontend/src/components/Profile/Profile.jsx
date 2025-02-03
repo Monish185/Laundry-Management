@@ -8,12 +8,13 @@ const Profile = () => {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(false);
     const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
                 const token = localStorage.getItem("authToken");
-                const res = await axios.get(`${import.meta.env.VITE_API_URL}profile/`, {
+                const res = await axios.get(`${API_URL}/laundry/profile/`, {
                     headers: { Authorization: `Token ${token}` }
                 });
                 setUser(true);
@@ -33,7 +34,7 @@ const Profile = () => {
     const handleLogOut = async () => {
         try {
             const token = localStorage.getItem('authToken');
-            const res = await axios.post(`${import.meta.env.VITE_API_URL}logout/`, {}, {
+            const res = await axios.post(`${API_URL}/laundry/logout/`, {}, {
                 headers: { Authorization: `Token ${token}` },
             });
             localStorage.removeItem('authToken');

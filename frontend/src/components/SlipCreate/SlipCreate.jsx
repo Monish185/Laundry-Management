@@ -29,6 +29,7 @@ const SlipCreate = () => {
   const [isWorker, setIsWorker] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -39,7 +40,7 @@ const SlipCreate = () => {
       }
 
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}profile/`, {
+        const response = await axios.get(`${API_URL}/laundry/profile/`, {
           headers: { Authorization: `Token ${token}` },
         });
 
@@ -51,7 +52,7 @@ const SlipCreate = () => {
     };
 
     fetchUserRole();
-  }, []);
+  }, [API_URL]);
 
   const handleChange = (item, value) => {
     setQuantities((prev) => ({
@@ -62,38 +63,18 @@ const SlipCreate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     const token = localStorage.getItem("authToken");
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}create-slip/`,
+        `${API_URL}/laundry/create-slip/`,
         { roll_no: rollNo, particulars: quantities },
         { headers: { Authorization: `Token ${token}`, "Content-Type": "application/json" } }
       );
 
       alert("Slip created successfully!");
       setRollNo("");
-      setQuantities({
-        jeans: "",
-        pant: "",
-        shirt: "",
-        tshirt: "",
-        lower: "",
-        shorts: "",
-        towel: "",
-        bsheets: "",
-        pillowCover: "",
-        dohar: "",
-        socks: "",
-        shoes: "",
-        blanket: "",
-        jacket: "",
-        sweater: "",
-        hoodie: "",
-        bag: "",
-        hankey: "",
-        curtain: "",
-      });
+      setQuantities(Object.keys(quantities).reduce((acc, key) => ({ ...acc, [key]: "" }), {}));
     } catch (error) {
       console.error("Error creating slip:", error);
     }
@@ -132,7 +113,7 @@ const SlipCreate = () => {
                       value={quantities[item]}
                       onChange={(e) => handleChange(item, e.target.value)}
                       placeholder="Qty"
-                      className="w-1/3 capitalize font-bold text-gray-800 text-sm"
+                      className="w-1/3 capitalize font-bold text-gray-800 text-sm border border-gray-400 px-2 py-1 rounded"
                       min="0"
                     />
                   </div>
@@ -142,7 +123,7 @@ const SlipCreate = () => {
 
             <button
               type="submit"
-              className="btn block w-full px-4 py-2 bg-gray-800 text-white font-bold rounded hover:bg-gray-900"
+              className="btn block w-full px-4 py-2 bg-gray-800 text-white font-bold rounded hover:bg-gray-900 mt-4"
             >
               Create Slip
             </button>
