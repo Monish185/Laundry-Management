@@ -27,6 +27,8 @@ const Student = () => {
                     headers: { Authorization: `Token ${token}` },
                 });
     
+                console.log("User Profile Response:", userRes.data);
+                console.log("User Profile Response:", userRes.data);
                 console.log("User Profile Response:", userRes.data); // Debugging log
     
                 if (userRes.data.role !== "student") {

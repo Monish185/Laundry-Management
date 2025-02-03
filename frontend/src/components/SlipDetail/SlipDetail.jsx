@@ -55,7 +55,7 @@ function SlipDetail() {
         try {
             const token = localStorage.getItem('authToken');
             const res = await axios.post(
-                `${import.meta.env.VITE_API_URL}edit-particulars/`,
+                `${import.meta.env.VITE_API_URL}/laundry/edit-particulars/`,
                 { slip_id: id, particulars },
                 { headers: { Authorization: `Token ${token}`, 'Content-Type': 'application/json' } }
             );
