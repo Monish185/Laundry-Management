@@ -20,7 +20,7 @@ const Student = () => {
     
                 if (!token) {
                     setLoading(false);
-                    return navigate("/login/student/");
+                    return;
                 }
     
                 const userRes = await axios.get(`${API_URL}/laundry/profile/`, {
@@ -33,7 +33,7 @@ const Student = () => {
     
                 if (userRes.data.role !== "student") {
                     setLoading(false);
-                    return navigate("/");
+                    return;
                 }
     
                 setIsStudent(true);

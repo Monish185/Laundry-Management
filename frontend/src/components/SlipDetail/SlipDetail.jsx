@@ -10,19 +10,24 @@ function SlipDetail() {
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [isWorker, setIsWorker] = useState(false);
+    
+    // Ensure API URL is formatted correctly
+    const API_URL = import.meta.env.VITE_API_URL.replace(/\/$/, "");
 
     useEffect(() => {
         const fetchSlip = async () => {
             try {
                 const token = localStorage.getItem('authToken');
-                const user = await axios.get(`${import.meta.env.VITE_API_URL}profile/`, {
+                const user = await axios.get(`${API_URL}/laundry/profile/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
+
                 setIsWorker(user.data.role === 'worker');
 
-                const res = await axios.get(`${import.meta.env.VITE_API_URL}get-slip-details/${id}/`, {
+                const res = await axios.get(`${API_URL}/laundry/get-slip-details/${id}/`, {
                     headers: { Authorization: `Token ${token}` },
                 });
+
                 setSlip(res.data);
                 setParticulars(res.data.particulars || {});
             } catch (error) {
@@ -33,13 +38,13 @@ function SlipDetail() {
         };
 
         fetchSlip();
-    }, [id, navigate]);
+    }, [id]);
 
     const handleAction = async (status) => {
         try {
             const token = localStorage.getItem('authToken');
             const res = await axios.post(
-                `${import.meta.env.VITE_API_URL}update-slip-status/${id}/`,
+                `${API_URL}/laundry/update-slip-status/${id}/`,
                 { status },
                 { headers: { Authorization: `Token ${token}`, 'Content-Type': 'application/json' } }
             );
@@ -55,18 +60,19 @@ function SlipDetail() {
         try {
             const token = localStorage.getItem('authToken');
             const res = await axios.post(
-                `${import.meta.env.VITE_API_URL}/laundry/edit-particulars/`,
+                `${API_URL}/laundry/edit-particulars/`,
                 { slip_id: id, particulars },
                 { headers: { Authorization: `Token ${token}`, 'Content-Type': 'application/json' } }
             );
 
             alert(res.data.message);
             setIsEditing(false);
-            navigate(`/slip-detail/${id}`);
+            setSlip((prevSlip) => ({ ...prevSlip, particulars }));
         } catch (error) {
             console.error('Error updating particulars:', error);
         }
     };
+
     const handleResolveIssue = (studentEmail, slipId, issue) => {
         const subject = encodeURIComponent(`Laundry Issue Resolution - Slip #${slipId}`);
         const body = encodeURIComponent(
@@ -74,7 +80,7 @@ function SlipDetail() {
         );
         window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${studentEmail}&su=${subject}&body=${body}`, "_blank");
     };
-    
+
     if (loading) {
         return (
             <div className="p-6 bg-gray-100 min-h-screen flex items-center justify-center">
@@ -82,13 +88,14 @@ function SlipDetail() {
             </div>
         );
     }
+
     if (!isWorker) {
         return (
             <div className="flex flex-col items-center justify-center h-full">
                 <h2 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h2>
                 <p className="text-lg text-gray-800 mb-4">You must be logged in as a worker to access this page.</p>
                 <button
-                    className="btn px-4 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700"
+                    className="px-4 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700"
                     onClick={() => navigate('/Login/LaundryWorker/')}
                 >
                     Login
@@ -96,6 +103,7 @@ function SlipDetail() {
             </div>
         );
     }
+
     if (!slip) {
         return (
             <div className="p-6 bg-gray-100 min-h-screen flex items-center justify-center">
@@ -117,19 +125,38 @@ function SlipDetail() {
                     <strong>Particulars:</strong>
                 </p>
 
-                <div className="bg-gray-50 border border-gray-300 rounded-lg p-4 mt-2 shadow-md">
-                    <div className="grid grid-cols-2 gap-4">
+                {!isEditing ? (
+                    <div className="bg-gray-50 border border-gray-300 rounded-lg p-4 mt-2 shadow-md">
+                        <div className="grid grid-cols-2 gap-4">
+                            {Object.entries(particulars).map(([key, value]) => (
+                                <div key={key} className="flex justify-between py-2 px-4 border-b last:border-b-0 text-gray-700 bg-white rounded-md shadow-sm">
+                                    <span className="font-semibold">{key}:</span>
+                                    <span>{value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="p-4 bg-gray-100 mt-4 rounded-lg shadow-md">
                         {Object.entries(particulars).map(([key, value]) => (
-                            <div
-                                key={key}
-                                className="flex justify-between py-2 px-4 border-b last:border-b-0 text-gray-700 bg-white rounded-md shadow-sm"
-                            >
+                            <div key={key} className="flex justify-between items-center p-2 border-b">
                                 <span className="font-semibold">{key}:</span>
-                                <span>{value}</span>
+                                <input
+                                    type="text"
+                                    value={value}
+                                    onChange={(e) => setParticulars({ ...particulars, [key]: e.target.value })}
+                                    className="border rounded p-1"
+                                />
                             </div>
                         ))}
+                        <button onClick={handleUpdate} className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mt-2">
+                            Save Changes
+                        </button>
+                        <button onClick={() => setIsEditing(false)} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 mt-2">
+                            Cancel
+                        </button>
                     </div>
-                </div>
+                )}
 
                 <p className="mt-4">
                     <strong>Status:</strong> {slip?.status || 'N/A'}
@@ -139,13 +166,8 @@ function SlipDetail() {
                     <h3 className="text-lg font-semibold">Reported Issue:</h3>
                     {slip?.issue ? (
                         <>
-                        <p className="p-4 bg-red-50 text-red-600 border border-red-300 rounded-lg shadow-md">
-                            {slip.issue}
-                        </p>
-                            <button
-                                onClick={() => handleResolveIssue(slip.student.email,slip.id,slip.issue)}
-                                className="px-4 py-2 bg-amber-500 text-white rounded hover:bg-green-600 m-2"
-                            >
+                            <p className="p-4 bg-red-50 text-red-600 border border-red-300 rounded-lg shadow-md">{slip.issue}</p>
+                            <button onClick={() => handleResolveIssue(slip.student.email, slip.id, slip.issue)} className="px-4 py-2 bg-amber-500 text-white rounded hover:bg-green-600 m-2">
                                 Resolve Issue
                             </button>
                         </>
@@ -153,38 +175,10 @@ function SlipDetail() {
                         <p className="text-gray-500">No issues reported by the student.</p>
                     )}
                 </div>
-               
             </div>
 
             <div className="mt-4 space-x-4">
-                <button
-                    onClick={() => handleAction('ready')}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                    Mark Ready
-                </button>
-                <button
-                    onClick={() => handleAction('not done')}
-                    className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                >
-                    Mark Not Ready
-                </button>
-                <button
-                    onClick={() => handleAction('done')}
-                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                >
-                    Mark Done
-                </button>
-                <button
-                    onClick={() => setIsEditing(true)}
-                    className="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600"
-                >
-                    Edit Particulars
-                </button>
-                <button
-                    onClick={() => navigate(`/slip-list`)}
-                    className="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600"
-                >
+                <button onClick={() => navigate(-1)} className="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600">
                     Back
                 </button>
             </div>

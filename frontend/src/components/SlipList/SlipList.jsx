@@ -8,17 +8,19 @@
         const [loading, setLoading] = useState(true);
         const [isWorker,setIsWorker] = useState(false);
         const navigate = useNavigate();
+
+        const API_URL = import.meta.env.VITE_API_URL;
         useEffect(() => {
             const fetchSlips = async () => {
                 try {
                     const token = localStorage.getItem("authToken");  
-                    const user = await axios.get(`${import.meta.env.VITE_API_URL}/laundry/profile/`, {
+                    const user = await axios.get(`${API_URL}/laundry/profile/`, {
                         headers: {
                             Authorization: `Token ${token}`,
                         },
                     });
                     setIsWorker(user.data.role ===   'worker');
-                    const res = await axios.get(`${import.meta.env.VITE_API_URL}/laundry/slip-list/`, {
+                    const res = await axios.get(`${API_URL}/laundry/slip-list/`, {
                         headers: {
                             Authorization: `Token ${token}`,  // Include token in headers
                         },
