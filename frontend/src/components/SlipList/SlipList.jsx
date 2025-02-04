@@ -98,7 +98,7 @@
                             ))}
                         </div>
                         <Link
-                            to={`slip-create/`}
+                            to={`/slip-create/`}
                             className="block mt-6 px-4 py-2 bg-green-500 text-white rounded text-center hover:bg-green-600"
                         >
                             Create New Slip
