@@ -2,7 +2,6 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { createHashRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
-import About from './components/About/About.jsx';
 import Contact from './components/Contact/Contact.jsx';
 import Layout from './Layout.jsx';
 import App from './App.jsx';
@@ -29,7 +28,6 @@ const router = createHashRouter(
       <Route path="slip-detail/:id" element={<SlipDetail />} />
       <Route path="admin-dashboard" element={<Admin />} />
       <Route path="profile" element={<Profile />} />
-      <Route path="about" element={<About />} />
       <Route path="contact" element={<Contact />} />
     </Route>
   )
